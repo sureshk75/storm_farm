@@ -1,7 +1,8 @@
-import pyautogui
 import time
 
+import pyautogui
 from PySide6.QtCore import (QObject, Signal)
+from view import image_path
 
 
 # noinspection PyArgumentList
@@ -92,15 +93,15 @@ class FarmAway(QObject):
 
     def _enter_location(self):
         region = (540, 0, 360, 220)
-        while not pyautogui.locateOnScreen(image="./images/train_l.png", region=region, confidence=0.9):
+        while not pyautogui.locateOnScreen(image=image_path("train_l.png"), region=region, confidence=0.9):
             if self._is_killed:
                 return
-            if found := pyautogui.locateOnScreen(image="./images/train_m.png", region=region, confidence=0.9):
+            if found := pyautogui.locateOnScreen(image=image_path("train_m.png"), region=region, confidence=0.9):
                 point = pyautogui.center(found)
                 pyautogui.moveTo(point)
                 pyautogui.leftClick()
             time.sleep(0.1)
-        if found := pyautogui.locateOnScreen(image="./images/train_l.png", region=region, confidence=0.9):
+        if found := pyautogui.locateOnScreen(image=image_path("train_l.png"), region=region, confidence=0.9):
             point = pyautogui.center(found)
             pyautogui.moveTo(point.x - 13, point.y)
             pyautogui.leftClick()
@@ -121,7 +122,7 @@ class FarmAway(QObject):
 
     def _target_dialog(self):
         region = (750, 540, 120, 38)
-        while not (found := pyautogui.locateOnScreen(image="./images/train_ma.png", region=region, confidence=0.9)):
+        while not (found := pyautogui.locateOnScreen(image=image_path("train_ma.png"), region=region, confidence=0.9)):
             if self._is_killed:
                 return
             time.sleep(0.1)
@@ -133,7 +134,7 @@ class FarmAway(QObject):
         region = (358, 400, 711, 330)
         for troop in self._data["march"]["troop"]:
             if troop[0]:
-                if found := pyautogui.locateOnScreen(image=troop[0], region=region, confidence=0.9):
+                if found := pyautogui.locateOnScreen(image=image_path(troop[0]), region=region, confidence=0.9):
                     point = pyautogui.center(found)
                     pyautogui.moveTo(point.x, point.y + 36)
                     pyautogui.leftClick()
@@ -145,7 +146,7 @@ class FarmAway(QObject):
     @staticmethod
     def _send_march():
         region = (965, 803, 128, 36)
-        if found := pyautogui.locateOnScreen(image="./images/train_ta.png", region=region, confidence=0.9):
+        if found := pyautogui.locateOnScreen(image=image_path("train_ta.png"), region=region, confidence=0.9):
             point = pyautogui.center(found)
             pyautogui.moveTo(point.x, point.y)
             pyautogui.leftClick()
@@ -153,7 +154,7 @@ class FarmAway(QObject):
     @staticmethod
     def _quick_repeat():
         region = (377, 806, 156, 29)
-        if found := pyautogui.locateOnScreen(image="./images/train_ls.png", region=region, confidence=0.9):
+        if found := pyautogui.locateOnScreen(image=image_path("train_ls.png"), region=region, confidence=0.9):
             point = pyautogui.center(found)
             pyautogui.moveTo(point.x, point.y)
             pyautogui.leftClick()

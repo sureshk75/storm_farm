@@ -1,25 +1,23 @@
-from PySide6.QtWidgets import (QApplication, QMessageBox)
-from PySide6.QtCore import (QThread, Slot)
-
 import pygetwindow
+from PySide6.QtCore import (QThread, Slot)
+from PySide6.QtWidgets import (QApplication, QMessageBox)
 
-from view import *
 from operations import *
-import sys
+from view import *
 
 APP_TITLE = "STORM FARM Enhanced By AlphaQ2"
 ATTACK_TROOPS = {
-            "Banshee": {"icon": "./images/icon_bs.png", "data": "./images/train_bs.png"},
-            "Lava Jaw": {"icon": "./images/icon_lj.png", "data": "./images/train_lj.png"},
-            "Longbowman": {"icon": "./images/icon_lb.png", "data": "./images/train_lb.png"},
-            "Sand Strider": {"icon": "./images/icon_ss.png", "data": "./images/train_ss.png"},
-            "Swift Strike Dragon": {"icon": "./images/icon_sd.png", "data": "./images/train_sd.png"},
-            "Venge Wyrm": {"icon": "./images/icon_vw.png", "data": "./images/train_vw.png"}
+            "Banshee": {"icon": "icon_bs.png", "data": "train_bs.png"},
+            "Lava Jaw": {"icon": "icon_lj.png", "data": "train_lj.png"},
+            "Longbowman": {"icon": "icon_lb.png", "data": "train_lb.png"},
+            "Sand Strider": {"icon": "icon_ss.png", "data": "train_ss.png"},
+            "Swift Strike Dragon": {"icon": "icon_sd.png", "data": "train_sd.png"},
+            "Venge Wyrm": {"icon": "icon_vw.png", "data": "train_vw.png"}
         }
 LOAD_TROOPS = {
             "": {"icon": "", "data": ""},
-            "Armored Transport": {"icon": "./images/icon_at.png", "data": "./images/train_at.png"},
-            "Pack Dragon": {"icon": "./images/icon_pd.png", "data": "./images/train_pd.png"}
+            "Armored Transport": {"icon": "icon_at.png", "data": "train_at.png"},
+            "Pack Dragon": {"icon": "icon_pd.png", "data": "train_pd.png"}
         }
 
 
@@ -33,7 +31,7 @@ class MainUI(QWidget):
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.setWindowTitle(APP_TITLE)
-        self.setWindowIcon(QIcon("./images/icon.ico"))
+        self.setWindowIcon(QIcon(image_path("icon.ico")))
 
         self._main = MainContainer(self)
         self._main.buttonToggled.connect(self._state_changed)
@@ -48,6 +46,7 @@ class MainUI(QWidget):
 
     def closeEvent(self, event):
         if self._thread and self._thread.isRunning():
+            self._worker.stop()
             self._thread.quit()
             self._thread.wait()
         sys.exit()

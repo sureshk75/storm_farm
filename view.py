@@ -1,9 +1,17 @@
+import os
+import sys
+
+from PySide6.QtCore import (Qt, QSize, Signal)
+from PySide6.QtGui import (QIcon)
 from PySide6.QtWidgets import (
     QWidget, QGridLayout, QHBoxLayout, QVBoxLayout, QLabel, QSpinBox, QComboBox, QSizePolicy, QPushButton,
     QStyle
 )
-from PySide6.QtCore import (Qt, QSize, Signal)
-from PySide6.QtGui import (QIcon)
+
+
+def image_path(relative_path):
+    base_path = os.path.join(getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__))), "images")
+    return os.path.join(base_path, relative_path)
 
 
 class Container(QWidget):
@@ -144,7 +152,7 @@ class MainContainer(QWidget):
         self._container2_combobox1.clear()
         for item in data:
             self._container2_combobox1.addItem(
-                QIcon(data[item]["icon"]), item, userData=data[item]["data"]
+                QIcon(image_path(data[item]["icon"])), item, userData=data[item]["data"]
             )
 
     @property
@@ -156,7 +164,7 @@ class MainContainer(QWidget):
         self._container2_combobox2.clear()
         for item in data:
             self._container2_combobox2.addItem(
-                QIcon(data[item]["icon"]), item, userData=data[item]["data"]
+                QIcon(image_path(data[item]["icon"])), item, userData=data[item]["data"]
             )
 
     @property
