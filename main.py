@@ -33,11 +33,11 @@ class MainUI(QWidget):
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.setWindowTitle(APP_TITLE)
-        self.setWindowIcon(QIcon(":/icons/icon.ico"))
+        self.setWindowIcon(QIcon("./images/icon.ico"))
 
         self._main = MainContainer(self)
         self._main.buttonToggled.connect(self._state_changed)
-        self._main.buttonClicked.connect(self.thread_interrupt)
+        self._main.buttonClicked.connect(self.thread_stopped)
 
         self._container = Container(self)
         self._container.add_widget(self._main)
@@ -47,7 +47,7 @@ class MainUI(QWidget):
         self._initialize()
 
     def closeEvent(self, event):
-        if self._thread.isRunning():
+        if self._thread and self._thread.isRunning():
             self._thread.quit()
             self._thread.wait()
         sys.exit()
@@ -65,24 +65,23 @@ class MainUI(QWidget):
             QMessageBox.critical(self, APP_TITLE, "Did You Think I Would Magically Load The Game\n"
                                                   "For You? Move Your Lazy Ass.. Idiot!")
             self.close()
-        self._thread = QThread()
 
     # noinspection PyUnresolvedReferences
     @Slot(bool)
     def _state_changed(self, state):
-        if self._thread.isRunning():
+        if self._thread and self._thread.isRunning():
             self._worker.resume() if state else self._worker.pause()
         if state:
+            self._thread = QThread()
             self._worker = FarmAway(data=self._main.config)
-            self._worker.moveToThread(self._thread)
             self._worker.progress.connect(self._main.set_status)
             self._worker.finished.connect(self.thread_ended)
+            self._worker.moveToThread(self._thread)
             self._thread.started.connect(self._worker.run)
             self._thread.start()
 
-    def thread_interrupt(self):
-        if self._thread.isRunning():
-            self._worker.pause()
+    def thread_stopped(self):
+        if self._thread and self._thread.isRunning():
             self._worker.stop()
 
     def thread_ended(self, text):
@@ -93,6 +92,7 @@ class MainUI(QWidget):
         else:
             QMessageBox.information(self, APP_TITLE, "I Did All The Heavy Lifting As Usual, You Lazy Ass!")
         self._main.reset_button()
+        self._thread = None
 
 
 if __name__ == '__main__':

@@ -23,6 +23,7 @@ class FarmAway(QObject):
         self._is_paused = False
 
     def stop(self):
+        self.pause()
         self._is_killed = True
 
     def _elapsed(self):
