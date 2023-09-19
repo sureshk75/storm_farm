@@ -53,6 +53,8 @@ class FarmAway(QObject):
         has_troops = True
         while (cycle < self._data["march"]["cycle"]) and not self._is_killed:
             self.status(cycle, count, "Initializing Location")
+            while self._is_paused and not self._is_killed:
+                time.sleep(1)
             self._enter_location()
             for idx in range(self._data["march"]["cap"]):
                 while self._is_paused and not self._is_killed:
@@ -77,6 +79,8 @@ class FarmAway(QObject):
                 sleeper = 0
                 while ((sleeper < self._data["march"]["interval"]) and
                        (cycle < self._data["march"]["cycle"]) and not self._is_killed):
+                    while self._is_paused and not self._is_killed:
+                        time.sleep(1)
                     self.status(cycle, count, f"{self._data['march']['interval'] - sleeper}s Until Next Cycle..")
                     sleeper += 1
                     time.sleep(1)
